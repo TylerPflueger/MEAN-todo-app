@@ -4,6 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost/news');
+
+require('./models/Todo');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,8 +26,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 
 app.use('/', routes);
+app.post('/todo', function(req, res, next, id) {
+    var Todo = mongoose.model('Todo');
+    var todo = new Todo(req.body);
+
+    todo.save(function(err, todo) {
+        if (err) return res.json(500, err);
+        res.json(todo);
+    });
+});
 app.use('/users', users);
 
 // catch 404 and forward to error handler
