@@ -3,11 +3,12 @@
   <head>
     <base href="/">
     <title><%= title %></title>
-    <link rel='stylesheet' href='stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="todomvc-common/base.css" />
+    <link rel='stylesheet' type="text/css" href='stylesheets/style.css' />
 
-    <script src="bower_components/angularjs/angular.min.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
+    <script src="angularjs/angular.min.js"></script>
+    <script src="angular-resource/angular-resource.js"></script>
+    <script src="angular-route/angular-route.js"></script>
 
     <script src="javascripts/app.js"></script>
     <script src="javascripts/controllers/main.js"></script>
@@ -15,7 +16,7 @@
     <script src="javascripts/directives/todofocus.js"></script>
     <script src="javascripts/services/todo.js"></script>
   </head>
-  <body ng-app="todomvcApp">
+  <body ng-app="todomvcApp" id="tyler">
     <div class="container" ng-view=""></div>
   </body>
 </html>
