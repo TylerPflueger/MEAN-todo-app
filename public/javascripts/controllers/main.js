@@ -7,7 +7,21 @@ angular.module('todomvcApp')
         $scope.editedTodo = null;
         $scope.status = $location.search().q || '';
 
-        $scope.$watch('todos', function () {
+        $scope.$watch('todos', function (newVal, oldVal) {
+            newVal.forEach(function(val, i) {
+                if(!oldVal[i]) {
+                    return;
+                }
+                if(val.completed !== oldVal[i].completed) {
+                    var index = i;
+                    var id = val._id;
+                    Todo.updateTodo(id, $scope.todos[index]).then(function(todo) {
+                        $scope.todos[index] = todo;
+                    }, function(error) {
+                        console.log(error);
+                    });
+                }
+            });
             $scope.remainingCount = filterFilter($scope.todos, { completed: false }).length;
             $scope.completedCount = $scope.todos.length - $scope.remainingCount;
             $scope.allChecked = !$scope.remainingCount;
@@ -27,13 +41,16 @@ angular.module('todomvcApp')
                 return;
             }
 
-            var newTodo = new Todo({
+            var newTodo = {
                 title: todoTitle,
                 completed: false
+            };
+            Todo.addTodo(newTodo).then(function(todo) {
+                $scope.todos.unshift(todo);
+                $scope.newTodo = '';
+            }, function(error) {
+                console.log(error);
             });
-            newTodo.$save();
-            $scope.todos.unshift(newTodo);
-            $scope.newTodo = '';
         };
 
         $scope.editTodo = function (id) {
@@ -45,7 +62,11 @@ angular.module('todomvcApp')
             $scope.editedTodo = null;
             var title = $scope.todos[id].title.trim();
             if (title) {
-                $scope.todos[id].$update();
+                Todo.updateTodo($scope.todos[id]._id, $scope.todos[id]).then(function(todo) {
+                    $scope.todos[id] = todo;
+                }, function(error) {
+                    console.log(error);
+                });
             } else {
                 $scope.removeTodo(id);
             }
@@ -57,8 +78,11 @@ angular.module('todomvcApp')
         };
 
         $scope.removeTodo = function (id) {
-            $scope.todos[id].$remove();
-            $scope.todos.splice(id, 1);
+            Todo.removeTodo($scope.todos[id]._id).then(function(todo) {
+                $scope.todos.splice(id,1);
+            }, function(error) {
+                console.log(error);
+            });
         };
 
         $scope.toggleCompleted = function (id) {
@@ -88,12 +112,13 @@ angular.module('todomvcApp')
 
         // Poll server to regularly update todos
         (function refreshTodos() {
-            Todo.query(function(response) {
-                // Update todos if a todo is not being edited
+            Todo.getTodos().then(function(todos) {
                 if($scope.editedTodo === null) {
-                    $scope.todos = response;
+                    $scope.todos = todos;
                 }
                 $scope.promise = $timeout(refreshTodos, 5000);
+            }, function(error) {
+               console.log(error);
             });
         })();
 
