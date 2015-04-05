@@ -62,15 +62,19 @@ angular.module('todomvcApp')
             $scope.editedTodo = null;
             var title = $scope.todos[id].title.trim();
             if (title) {
-                Todo.updateTodo($scope.todos[id]._id, $scope.todos[id]).then(function(todo) {
-                    $scope.todos[id] = todo;
-                }, function(error) {
-                    console.log(error);
-                });
+                updateTodo(id);
             } else {
                 $scope.removeTodo(id);
             }
         };
+
+        function updateTodo(id) {
+            Todo.updateTodo($scope.todos[id]._id, $scope.todos[id]).then(function(todo) {
+                $scope.todos[id] = todo;
+            }, function(error) {
+                console.log(error);
+            });
+        }
 
         $scope.revertEditing = function (id) {
             $scope.todos[id] = $scope.originalTodo;
@@ -88,14 +92,14 @@ angular.module('todomvcApp')
         $scope.toggleCompleted = function (id) {
             var todo = $scope.todos[id];
             todo.completed = !todo.completed;
-            todo.$update();
+            updateTodo(id);
         };
 
         $scope.clearCompletedTodos = function () {
             var remainingTodos = [];
-            angular.forEach($scope.todos, function (todo) {
+            angular.forEach($scope.todos, function (todo, id) {
                 if (todo.completed) {
-                    todo.$remove();
+                    $scope.removeTodo(id);
                 } else {
                     remainingTodos.push(todo);
                 }
@@ -104,9 +108,9 @@ angular.module('todomvcApp')
         };
 
         $scope.markAll = function (allCompleted) {
-            angular.forEach($scope.todos, function (todo) {
+            angular.forEach($scope.todos, function (todo, id) {
                 todo.completed = !allCompleted;
-                todo.$update();
+                updateTodo(id);
             });
         };
 
