@@ -6,6 +6,7 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
+        '../../node_modules/requirejs/require.js',
         '../../bower_components/angular/angular.js',
         '../../bower_components/angular-mocks/angular-mocks.js',
         '../../bower_components/angular-resource/angular-resource.js',
@@ -20,6 +21,7 @@ module.exports = function(config) {
         './test/**/*.js'
     ],
     reporters: ['progress'],
+    browsers: ['PhantomJS'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
