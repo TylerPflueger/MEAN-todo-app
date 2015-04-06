@@ -18,7 +18,7 @@ angular.module('todomvcApp')
                     Todo.updateTodo(id, $scope.todos[index]).then(function(todo) {
                         $scope.todos[index] = todo;
                     }, function(error) {
-                        console.log(error);
+
                     });
                 }
             });
@@ -49,7 +49,7 @@ angular.module('todomvcApp')
                 $scope.todos.unshift(todo);
                 $scope.newTodo = '';
             }, function(error) {
-                console.log(error);
+
             });
         };
 
@@ -72,7 +72,7 @@ angular.module('todomvcApp')
             Todo.updateTodo($scope.todos[id]._id, $scope.todos[id]).then(function(todo) {
                 $scope.todos[id] = todo;
             }, function(error) {
-                console.log(error);
+
             });
         }
 
@@ -85,7 +85,7 @@ angular.module('todomvcApp')
             Todo.removeTodo($scope.todos[id]._id).then(function(todo) {
                 $scope.todos.splice(id,1);
             }, function(error) {
-                console.log(error);
+
             });
         };
 
@@ -122,7 +122,7 @@ angular.module('todomvcApp')
                 }
                 $scope.promise = $timeout(refreshTodos, 5000);
             }, function(error) {
-               console.log(error);
+
             });
         })();
 
