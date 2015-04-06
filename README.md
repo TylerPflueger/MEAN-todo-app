@@ -10,4 +10,6 @@ npm start - start web server
 
 gulp - run default tasks along with tests
 
-karma start - within public/javascripts directory to run front-end unit tests
+gulp test - run front-end tests
+
+gulp testServer - run back-end tests
